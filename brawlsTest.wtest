@@ -1,0 +1,52 @@
+import brawls.*
+
+describe "tests de browls" {
+	
+	const dibu = new Arquero(agilidad = 25, rango = 40)
+	const leia = new Guerrera(estrategia = false, fuerza = 100)
+	const marita = new Ballestero(agilidad = 0, rango = 101)
+	const unaMisionInd = new MisionIndividual(dificultad = 100, personaje = dibu)
+	const otraMision = new MisionDeEquipo(personajes=[dibu,leia,marita])
+	const unaMisionSinPersonajes = new MisionDeEquipo()
+
+
+	test "mision superada" {	
+		assert.that(unaMisionInd.puedeSuperar())
+	}
+	
+	test "mision sin personajes, es tan trivial que puede ser superada" {
+		assert.that(unaMisionSinPersonajes.puedeSuperar())
+	}
+	
+	test "mision no superada" {
+		assert.notThat(otraMision.puedeSuperar())
+	}
+	
+	
+	test "cant copas de una misión con boost se multiplica por el multiplicador" {
+		
+		var mision = new MisionIndividual(dificultad = 10, personaje = leia, tipoPremiacion = new Boost(multiplicador = 3))
+		
+		assert.equals(60, mision.cantidadFinalDeCopas())
+	}
+
+	// Punto 4)
+	
+	// puede ser superada cuando el personaje tiene estrategia o bien cuando su destreza supera la dificultad de la misión.
+	// prueba que una misión individual fue superada
+	
+	test "una mision individual es superada cuando el personaje tiene estrategia (no importa la destreza)" {
+		unaMisionInd.personaje(marita)
+		assert.that(unaMisionInd.puedeSuperar())
+	}
+	test "una mision individual es superada cuando el personaje supera la destreza de la misión (no importa la estrategia)" {
+		assert.that(unaMisionInd.puedeSuperar())
+	}
+	
+	test "una mision individual no es superada cuando no le alcanza la destreza (sin tener estrategia)" {
+		unaMisionInd.personaje(new Guerrera(estrategia=false, fuerza=1))
+		assert.notThat(unaMisionInd.puedeSuperar())
+	}
+
+
+}

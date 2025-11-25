@@ -1,0 +1,15 @@
+import catar.*
+
+describe "calificacion otorgada por un pastelero" {
+
+  const chiru = new Cocinero(especialidad = new Chef(cantidadCaloriasDeseadas= 200))
+  const pastelero = new Cocinero(especialidad = new Pastelero(nivelDeseadoDeDulzor = 100))
+
+  test "chiru realiza un plato y pastelero lo cata" {
+    const plato = chiru.cocinar()
+    assert.equals(10, pastelero.calificar(plato))
+
+  }
+
+}
+
