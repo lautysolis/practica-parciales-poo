@@ -1,0 +1,49 @@
+import mensajes.*
+import usuarios.*
+import chats.*
+
+describe "Wolloksapp" { 
+
+	const alf = new Usuario(espacioMemoria = 100, nombre = "alf")
+	const rasta = new Usuario(espacioMemoria = 1000, nombre = "rasta")
+	const chat = new Chat(participantes = [ alf, rasta ])
+	const mensaje = new Mensaje(contenido = new Texto(texto = "Hola"), emisor = alf)
+
+	test "Saber el espacio que ocupa un chat" {
+		alf.agregarChat(chat)
+		rasta.agregarChat(chat)
+		alf.enviar(mensaje, chat)
+		assert.equals(10.2, chat.espacioQueOcupa())
+	}
+
+	test "Enviar un mensaje a un chat" {
+		alf.agregarChat(chat)
+		rasta.agregarChat(chat)
+		alf.enviar(mensaje, chat)
+		assert.that(chat.mensajes().contains(mensaje))
+	}
+	
+	test "Mensajes mas pesados" {
+		alf.agregarChat(chat)
+		rasta.agregarChat(chat)
+		alf.enviar(mensaje, chat)
+		assert.equals([mensaje], alf.mensajesMasPesados())
+	}
+	
+	test "Leer un chat" {
+		alf.agregarChat(chat)
+		rasta.agregarChat(chat)
+		alf.enviar(mensaje, chat)
+		rasta.leer(chat)
+		assert.equals(0, rasta.notisSinLeer().size())
+		assert.equals(1, alf.notisSinLeer().size())
+	}
+
+	test "Buscar" {
+		alf.agregarChat(chat)
+		rasta.agregarChat(chat)
+		alf.enviar(mensaje, chat)
+		assert.equals([chat], alf.buscarTexto("Hola"))
+	}
+
+}
